@@ -140,10 +140,13 @@
     required = true
 
 [branch]
+#When branching off a remote branch, automatically let the local branch track the remote branch
     autosetupmerge = true
 
 [diff]
+#Tell git diff to use mnemonic prefixes (index, work tree, commit, object) instead of the standard a and b notation
     mnemonicprefix = true
 
 [push]
+#When pushing without giving a refspec, push the current branch to its upstream branch. See the git config man page for more possible options
     default = tracking
