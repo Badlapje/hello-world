@@ -150,3 +150,7 @@
 [push]
 #When pushing without giving a refspec, push the current branch to its upstream branch. See the git config man page for more possible options
     default = tracking
+
+[advice]
+#Disable “how to stage/unstage/add” hints given by git status
+#    statusHints = false
