@@ -1,0 +1,140 @@
+[user]
+    name = Koen Cornelis
+    email = koen.cornelis@vanonderen.be
+
+[core]
+    autocrlf = true
+    excludesfile = C:\\Users\\Badlapje\\Documents\\gitignore_global.txt
+    editor = 'C:\\Program Files\\Sublime Text 2\\sublime_text.exe' -multiInst -nosession
+
+# color {{{
+[color]
+    branch = auto
+    diff = auto
+    status = auto
+
+[color "branch"]
+    current = red reverse
+    local = blue
+    remote = green
+
+[color "diff"]
+    meta = yellow
+    frag = magenta
+    old = red bold
+    new = green
+    plain = white
+
+[color "status"]
+    added = yellow
+    changed = green
+    untracked = cyan
+# }}}
+
+[alias]
+    ###ATTRIBUTION###
+    #most of these were copied from @durdn, see http://durdn.com/blog/2012/11/22/must-have-git-aliases-advanced-examples/
+    #a couple advanced ones came from @haacked, see http://haacked.com/archive/2014/07/28/github-flow-aliases/
+
+
+    #edit the global git config file by hand
+    ec = config --global -e
+
+    ###BASIC STUFF###
+    st = status -s
+    cl = clone
+    ci = commit
+    co = checkout
+    br = branch
+    r = reset
+    cp = cherry-pick
+
+    ###COMMIT###
+    cm = commit -m
+    cma = commit -a -m
+    cmall = !git add -A && git commit -m
+    cmalp = "!f() { git cmall $1 && git push; }; f"
+    ca = commit --amend
+    amend = commit --amend
+    caa = commit -a --amend -C HEAD
+    #explanation of the below, see: http://haacked.com/archive/2014/07/28/github-flow-aliases/
+    #use to make a savepoint: first one with untracked files, latter one without
+    save = !git add -A && git commit -m 'SAVEPOINT'
+    wip = commit -am "WIP"
+    #use to reset the previous commit a save or wip point without losing the changes
+    undo = reset HEAD~1 --mixed
+    #commits everything and then does a hard reset => the new commit becomes unreachable (but not lost)
+    wipe = !git add -A && git commit -qm 'WIPE SAVEPOINT' && git reset HEAD~1 --hard
+
+    ###DEVELOPMENT##
+    cob = "!f() { git co -b $1; }; f"
+    cobsu = "!f() { git co -b $1 && git push --set-upstream origin $1; }; f"
+    bdel = branch -D
+    rbdel = push origin --delete
+    blist = branch --list -r
+    #for info see: http://haacked.com/archive/2014/07/28/github-flow-aliases/
+    up = !git pull --rebase --prune $@ && git submodule update --init --recursive
+    bclean = "!f() { git branch --merged ${1-master} | grep -v " ${1-master}$" | xargs -r git branch -d; }; f"
+    bdone = "!f() { git checkout ${1-master} && git up && git bclean ${1-master} && git tag $2; }; f"
+
+    ###RESET###
+    r1 = reset HEAD^
+    r2 = reset HEAD^^
+    rh = reset --hard
+    rh1 = reset HEAD^ --hard
+    rh2 = reset HEAD^^ --hard
+
+    ###CONFLICT/MERGES###
+    ours = "!f() { git co --ours $@ && git add $@; }; f"
+    theirs = "!f() { git co --theirs $@ && git add $@; }; f"
+
+    ###LOG###
+    # prettified short format git log
+    ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
+    #same as above showing changed files per commit
+    lc = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat
+    #prettified list oneline with absolute dates
+    lda = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=short
+    #same as above with relative dates
+    ldr = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=relative
+    #show modified files in last commit
+    dl = "!git lc -1"
+    #show diff for the last commit
+    dlc = diff --cached HEAD^
+
+    ###ALIASES###
+    #listing aliases that exist
+    aliaslist = "!git config -l | grep alias | cut -c 7-"
+    alias = "!git config -l | grep alias | cut -c 7-"
+    la = "!git config -l | grep alias | cut -c 7-"
+    #add new one
+    aa = git config --global alias.
+    addalias = git config --global alias.
+
+    #show full dif of a commit given a revision, use by given sha1 after dr
+    dr  = "!f() { git diff "$1"^.."$1"; }; f"
+
+    #find a file path in codebase
+    #example usage: $ git f trenches
+    #source/drafts/2012-11-12-more-curated-git-tips-from-the-trenches.html.md
+    ff = "!git ls-files | grep -i"
+
+    #search codebase for a string
+    #example usage: $ git gr trenches
+    fs = grep -Ii
+
+    #(un)assume a file as unchanged
+    assume = update-index --assume-unchanged
+    unassume = update-index --no-assume-unchanged
+
+    #(un)assume all (un)assumed files
+    assumeall = "!git st -s | awk {'print $2'} | xargs git assume"
+    unassumeall = "!git assumed | xargs git update-index --no-assume-unchanged"
+
+    #show assumed files
+    assumed = "!git ls-files -v | grep ^h | cut -c 3-"
+
+[filter "lfs"]
+    clean = git-lfs clean %f
+    smudge = git-lfs smudge %f
+    required = true
