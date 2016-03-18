@@ -53,7 +53,7 @@
     cm = commit -m
     cma = commit -a -m
     cmall = !git add -A && git commit -m
-    cmalp = "!f() { git cmall $1 && git push; }; f"
+    cmalp = "!f() { git cmall '$1' && git push; }; f"
     ca = commit --amend
     amend = commit --amend
     caa = commit -a --amend -C HEAD
